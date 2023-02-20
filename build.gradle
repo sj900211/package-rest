@@ -158,6 +158,14 @@ bootJar {
 }
 
 jib { // Docker 플러그인 설정
+    String profile = ''
+
+    if (project.hasProperty('profile')) {
+        profile = project.getProperty('profile')
+    } else {
+        profile = 'test'
+    }
+
     from {
         image = 'openjdk:17-jdk-alpine'
     }
@@ -167,6 +175,12 @@ jib { // Docker 플러그인 설정
             username = "${DOCKER_USERNAME}"
             password = "${DOCKER_PASSWORD}"
         }
+    }
+    container {
+        jvmFlags=[
+                '-Dspring.profiles.active=' + profile,
+                '-Dspring.config.location=/env/application.yml'
+        ]
     }
 }
 
@@ -205,46 +219,6 @@ tasks.register('testInfraDown') { // TEST 환경 Docker Compose DOWN
         exec {
             commandLine('docker-compose',
                     '-f', "${projectDir}/.docker/test/docker-compose.yml",
-                    'down', '-v')
-        }
-    }
-}
-
-tasks.register('devInfraUp') { // DEV 환경 Docker Compose UP
-    group 'infra develop'
-
-    dependsOn devInfraBuild
-
-    if (file("${projectDir}/.docker/dev/docker-compose.yml").exists()) {
-        exec {
-            commandLine('docker-compose',
-                    '-f', "${projectDir}/.docker/dev/docker-compose.yml",
-                    'up', '-d')
-        }
-    }
-}
-
-tasks.register('devInfraBuild') { // DEV 환경 Docker Compose Build
-    group 'infra develop'
-
-    dependsOn devInfraDown
-
-    if (file("${projectDir}/.docker/dev/docker-compose.yml").exists()) {
-        exec {
-            commandLine('docker-compose',
-                    '-f', "${projectDir}/.docker/dev/docker-compose.yml",
-                    'build')
-        }
-    }
-}
-
-tasks.register('devInfraDown') { // DEV 환경 Docker Compose DOWN
-    group 'infra develop'
-
-    if (file("${projectDir}/.docker/dev/docker-compose.yml").exists()) {
-        exec {
-            commandLine('docker-compose',
-                    '-f', "${projectDir}/.docker/dev/docker-compose.yml",
                     'down', '-v')
         }
     }

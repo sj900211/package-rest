@@ -46,8 +46,8 @@ spring:
           maintainTimeStats: false
     replica:
       hikari:
-        driver-class-name: org.h2.Driver
-        jdbc-url: jdbc:h2:mem:testdb
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://${INFRA_HOST}:${POSTGRES_REPLICA_PORT}/postgres
         username: ${POSTGRES_REPLICA_USERNAME}
         password: ${POSTGRES_REPLICA_PASSWORD}
         minimumIdle: 200
@@ -90,5 +90,5 @@ freshr:
     bucket: ${MINIO_BUCKET_NAME}
     access: ${MINIO_USERNAME}
     secret: ${MINIO_PASSWORD}
-    host: ${INFRA_PROTOCOL}://${INFRA_HOST}:${MINIO_API_PORT}
+    host: ${INFRA_PROTOCOL}://${MINIO_API_HOST}
     default-minute: 1

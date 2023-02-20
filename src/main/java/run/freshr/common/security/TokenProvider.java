@@ -1,7 +1,7 @@
 package run.freshr.common.security;
 
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
-import static com.google.common.base.CaseFormat.UPPER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.isNull;
@@ -19,11 +19,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import javax.crypto.spec.SecretKeySpec;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -277,7 +277,7 @@ public class TokenProvider {
   public String expiredJwt() throws JsonProcessingException {
     return objectMapper.writeValueAsString(ResponseData
         .builder()
-        .name(UPPER_CAMEL.to(LOWER_HYPHEN, EXPIRED_JWT.name()))
+        .name(UPPER_UNDERSCORE.to(LOWER_HYPHEN, EXPIRED_JWT.name()))
         .message(EXPIRED_JWT.getMessage())
         .build());
   }

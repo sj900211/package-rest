@@ -70,6 +70,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
       SecurityContextHolder.clearContext();
 
       try {
+        response.setStatus(INTERNAL_SERVER_ERROR.value());
         response.getWriter().write(provider.expiredJwt());
       } catch (IOException ex) {
         log.error("**** ExpiredJwtException > IOException ****");
